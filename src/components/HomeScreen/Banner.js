@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Banner.css';
+import axiosClient from '../../config/axios';
+import requests from '../../api/requests';
 
 const Banner = () => {
+  const [movie, setMovie] = useState([]);
+
+  useEffect(() => {
+    const getMovie = async () => {
+      const res = await axiosClient(requests.fetchNetflixOriginals);
+      setMovie(res.data.results[Math.floor(Math.random() * res.data.results.length - 1)]);
+
+      return res;
+    };
+
+    getMovie();
+  }, []);
+
   const truncate = (string, n) => {
     return string?.length > n ? string.substr(0, n - 1) + '...' : string;
   };
@@ -10,12 +25,15 @@ const Banner = () => {
     <header
       className="banner"
       style={{
-        backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png')",
+        backgroundImage: `url('https://image.tmdb.org/t/p/original${movie?.backdrop_path}')`,
         backgroundSize: "cover",
-        backgroundPosition: "center center"
+        backgroundPosition: "center center",
+        marginBottom: "30px"
       }}>
       <div className="banner__content">
-        <h1 className="banner__title">Movie name</h1>
+        <h1 className="banner__title">
+          {movie?.title || movie?.name || movie?.original_name}
+        </h1>
 
         <div className="banner__buttons">
           <button className="banner__button">Play</button>
@@ -23,7 +41,7 @@ const Banner = () => {
         </div>
 
         <p className="banner__description">
-          {truncate('This is a test description This is a test description This is a test description This is a test descriptionThis is a test description This is a test descriptionThis is a test description This is a test description This is a test description This is a test description This is a test description This is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test descriptionThis is a test description', 150)}
+          {truncate(movie?.overview, 150)}
         </p>
       </div>
 
