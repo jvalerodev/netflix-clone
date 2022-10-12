@@ -24,12 +24,12 @@ const App = () => {
         }));
       } else {
         // Logged out
-        dispatch(logout);
+        dispatch(logout());
       }
     });
 
     return unsuscribe;
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="app">
@@ -38,7 +38,7 @@ const App = () => {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomeScreen />} />
+            <Route index path="/" element={<HomeScreen />} />
             <Route path="/profile" element={<ProfileScreen />} />
           </Routes>
         </BrowserRouter>
